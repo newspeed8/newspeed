@@ -85,3 +85,7 @@ API 명세서 이미지와 설명, 노션링크
 
 주요 commit 정리
 
+
+### 9. 커밋 규칙
+<img width="816" alt="image" src="https://github.com/user-attachments/assets/274783a0-7ba8-4ea8-b910-1c27a96bdad9" />
+
