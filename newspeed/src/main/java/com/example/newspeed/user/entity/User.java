@@ -25,7 +25,11 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    private User(Long id){
-        this.id = id;
+    public void updatePassword(String password){
+        this.password = password;
+    }
+
+    public void updateUserName(String userName){
+        this.userName = userName;
     }
 }
