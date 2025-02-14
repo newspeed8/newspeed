@@ -1,4 +1,4 @@
-package com.example.newspeed.post.dto;
+package com.example.newspeed.post.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

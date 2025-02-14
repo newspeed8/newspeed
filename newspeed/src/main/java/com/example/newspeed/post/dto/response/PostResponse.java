@@ -1,4 +1,4 @@
-package com.example.newspeed.post.dto;
+package com.example.newspeed.post.dto.response;
 
 import java.time.LocalDateTime;
 

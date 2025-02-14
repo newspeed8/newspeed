@@ -1,7 +1,7 @@
 package com.example.newspeed.post.service;
 
-import com.example.newspeed.post.dto.PostRequest;
-import com.example.newspeed.post.dto.PostResponse;
+import com.example.newspeed.post.dto.request.PostRequest;
+import com.example.newspeed.post.dto.response.PostResponse;
 import com.example.newspeed.post.entity.Post;
 import com.example.newspeed.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
