@@ -38,7 +38,7 @@ public class UserController {
     }
 
     //비밀번호 변경
-    @PutMapping("/users/{id}")
+    @PutMapping("/users/{id}/username")
     public ResponseEntity<UserResponseDto> updatePassword(
             @SessionAttribute(name = Const.LOGIN_USER) Long id,
             @RequestBody UserPasswordUpdateRequestDto dto
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     //유저 이름 변경
-    @PutMapping("/users/{id}")
+    @PutMapping("/users/{id}/password")
     public ResponseEntity<UserResponseDto> updateUserName(
             @SessionAttribute(name = Const.LOGIN_USER) Long id,
             @RequestBody UserUserNameUpdateRequestDto dto
