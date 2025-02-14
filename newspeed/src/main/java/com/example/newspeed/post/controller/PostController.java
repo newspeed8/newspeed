@@ -1,7 +1,7 @@
 package com.example.newspeed.post.controller;
 
-import com.example.newspeed.post.dto.PostRequest;
-import com.example.newspeed.post.dto.PostResponse;
+import com.example.newspeed.post.dto.request.PostRequest;
+import com.example.newspeed.post.dto.response.PostResponse;
 import com.example.newspeed.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
