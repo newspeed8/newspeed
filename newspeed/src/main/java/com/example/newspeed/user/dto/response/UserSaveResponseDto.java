@@ -22,5 +22,4 @@ public class UserSaveResponseDto {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
 }
