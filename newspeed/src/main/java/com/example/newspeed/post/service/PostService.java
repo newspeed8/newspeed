@@ -23,6 +23,14 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public List<PostResponse> getPostByUserId(Long userId){
+        List<Post> posts = postRepository.findByUserId_Id(userId);
+        return posts.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+
     public PostResponse getPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
