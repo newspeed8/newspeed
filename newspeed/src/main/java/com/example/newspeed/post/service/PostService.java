@@ -4,6 +4,9 @@ import com.example.newspeed.post.dto.request.PostRequest;
 import com.example.newspeed.post.dto.response.PostResponse;
 import com.example.newspeed.post.entity.Post;
 import com.example.newspeed.post.repository.PostRepository;
+import com.example.newspeed.user.entity.User;
+import com.example.newspeed.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,22 +19,35 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<PostResponse> getAllPosts() {
         return postRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public PostResponse getPostById(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
         return mapToResponse(post);
     }
 
     @Transactional
     public PostResponse createPost(PostRequest request) {
-        Post post = new Post(request.title(), request.content(), request.imageUrl(), request.nickname2());
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다. userId: " + request.userId()));
+
+        Post post = new Post(
+                request.title(),
+                request.content(),
+                request.imageUrl(),
+                request.nickname2(),
+                user
+        );
+
         Post savedPost = postRepository.save(post);
         return mapToResponse(savedPost);
     }
@@ -39,9 +55,7 @@ public class PostService {
     @Transactional
     public PostResponse updatePost(Long postId, PostRequest request) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다"));
-        post.update(request.title(), request.content(), request.imageUrl(), request.nickname2());
-        return mapToResponse(post);
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
 
         /*
         // 필드별 직접 변경
@@ -51,12 +65,19 @@ public class PostService {
         post.setNickname2(request.nickname2());
         //이런식으로 필드별 직접 변경이 가능하나, 그냥 메서드로 빼내서 활용했음.
         */
+        post.update(
+                request.title(),
+                request.content(),
+                request.imageUrl(),
+                request.nickname2()
+        );
+        return mapToResponse(post);
     }
 
     @Transactional
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
         postRepository.delete(post);
     }
 

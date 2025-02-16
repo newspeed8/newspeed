@@ -5,6 +5,7 @@ import com.example.newspeed.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "post")
@@ -27,17 +28,18 @@ public class Post extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false, referencedColumnName = "id")
-    private User userId;
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    private User user;
 
     @Column(nullable = false)
     private String nickname2;
 
-    public Post(String title, String content, String imageUrl, String nickname2) {
+    public Post(String title, String content, String imageUrl, String nickname2, User user) {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
         this.nickname2 = nickname2;
+        this.user = user;
     }
 
 
