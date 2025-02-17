@@ -1,5 +1,6 @@
 package com.example.newspeed.friend.controller;
 
+import com.example.newspeed.friend.dto.FriendResponseDto;
 import com.example.newspeed.friend.service.FriendService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,24 +19,20 @@ public class FriendController {
 
     //친구 요청
     @PostMapping("/request")
-    public ResponseEntity<Void> sendFriendRequest(@RequestParam Long requesterId, @RequestParam Long receiverId) {
-        friendService.sendFriendRequest(requesterId, receiverId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<FriendResponseDto> sendFriendRequest(@RequestParam Long requesterId, @RequestParam Long receiverId) {
+        return ResponseEntity.ok(friendService.sendFriendRequest(requesterId, receiverId));
     }
 
     //친구 수락
     @PostMapping("/accept")
-    public ResponseEntity<Void> acceptFriendRequest(@RequestParam Long requesterId) {
-        friendService.acceptFriendRequest(requesterId);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    public ResponseEntity<FriendResponseDto> acceptFriendRequest(@RequestParam Long requesterId) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(friendService.acceptFriendRequest(requesterId));
     }
 
     //친구 삭제
     @PostMapping("/remove")
     public ResponseEntity<Void> removeFriend(@RequestParam Long requesterId, @RequestParam Long receiverId) {
         friendService.removeFriend(requesterId, receiverId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
-
-
 }

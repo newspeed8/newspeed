@@ -1,5 +1,6 @@
 package com.example.newspeed.friend.service;
 
+import com.example.newspeed.friend.dto.FriendResponseDto;
 import com.example.newspeed.friend.entity.Friend;
 import com.example.newspeed.friend.repository.FriendRepository;
 import com.example.newspeed.friend.status.FriendStatus;
@@ -18,7 +19,7 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
 
-    public void sendFriendRequest(Long requesterId, Long receiverId) {
+    public FriendResponseDto sendFriendRequest(Long requesterId, Long receiverId) {
         User requester = userRepository.findById(requesterId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자 아이디입니다"));
         User receiver = userRepository.findById(receiverId)
@@ -27,14 +28,16 @@ public class FriendService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 친구 요청을 보냈거나 친구입니다.");
         }
         Friend friend = new Friend(requester, receiver, FriendStatus.PENDING);
-        friendRepository.save(friend);
+        Friend savedFriend = friendRepository.save(friend);
+        return FriendResponseDto.toDto(savedFriend);
     }
 
-    public void acceptFriendRequest(Long requesterId) {
+    public FriendResponseDto acceptFriendRequest(Long requesterId) {
         Friend friend = friendRepository.findById(requesterId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 친구 요청입니다"));
         friend.setStatus(FriendStatus.ACCEPTED);
-        friendRepository.save(friend);
+        Friend savedFriend = friendRepository.save(friend);
+        return FriendResponseDto.toDto(savedFriend);
     }
 
     public void removeFriend(Long requesterId, Long receiverId) {

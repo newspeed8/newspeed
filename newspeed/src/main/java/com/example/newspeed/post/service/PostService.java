@@ -8,9 +8,12 @@ import com.example.newspeed.user.entity.User;
 import com.example.newspeed.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,14 +25,16 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPosts(Long userId) {
-        return postRepository.findFriendPostsByUserId(userId).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+    public Page<Post> findAllPosts(Pageable pageable, Long userId) {
+        return postRepository.findFriendPostsByUserId(pageable, userId);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Post> findAllPostsByStartAndEnd(Pageable pageable, LocalDateTime startDate, LocalDateTime endDate) {
+        return postRepository.findAllByUpdatedAtBetweenOrderByUpdatedAt(pageable, startDate, endDate);
+    }
 
-    public PostResponse getPostById(Long postId) {
+    public PostResponse findPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
         return mapToResponse(post);
