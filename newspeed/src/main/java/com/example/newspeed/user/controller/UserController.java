@@ -33,39 +33,8 @@ public class UserController {
 
     //id를 통한 유저 단건 조회
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserResponseDto> findOne(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> findOne(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.findOne(id));
     }
-
-    //비밀번호 변경
-    @PutMapping("/users/{id}/username")
-    public ResponseEntity<UserResponseDto> updatePassword(
-            @PathVariable Long id,
-//            @SessionAttribute(name = Const.LOGIN_USER) Long id,
-            @RequestBody UserPasswordUpdateRequestDto dto
-            ){
-        return ResponseEntity.ok(userService.updatePassword(id, dto.getOldPassword(), dto.getNewPassword()));
-    }
-
-    //유저 이름 변경
-    @PutMapping("/users/{id}/password")
-    public ResponseEntity<UserResponseDto> updateUserName(
-            @PathVariable Long id,
-//            @SessionAttribute(name = Const.LOGIN_USER) Long id,
-            @RequestBody UserUserNameUpdateRequestDto dto
-            ){
-        return ResponseEntity.ok(userService.updateUserName(id, dto.getNewUserName()));
-    }
-
-    //유저 삭제
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(
-            @PathVariable Long id
-//            HttpServletRequest request
-    ){
-//        HttpSession session = request.getSession(false);
-//        Long id = (Long) session.getAttribute(Const.LOGIN_USER);
-        userService.deleteUserById(id);
-//        session.invalidate();
-    }
+// 비밀번호 수정 / 유저 이름 변경/ 유저 삭제문 프로필 컨트롤러로 이동
 }
