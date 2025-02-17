@@ -33,7 +33,7 @@ public class UserController {
 
     //id를 통한 유저 단건 조회
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserResponseDto> findOne(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> findOne(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.findOne(id));
     }
 // 비밀번호 수정 / 유저 이름 변경/ 유저 삭제문 프로필 컨트롤러로 이동
