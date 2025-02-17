@@ -1,5 +1,6 @@
 package com.example.newspeed.post.service;
 
+import com.example.newspeed.exception.UnauthorizedException;
 import com.example.newspeed.post.dto.request.PostRequest;
 import com.example.newspeed.post.dto.response.PostResponse;
 import com.example.newspeed.post.entity.Post;
@@ -8,6 +9,10 @@ import com.example.newspeed.user.entity.User;
 import com.example.newspeed.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +69,11 @@ public class PostService {
         post.setNickname2(request.nickname2());
         //이런식으로 필드별 직접 변경이 가능하나, 그냥 메서드로 빼내서 활용했음.
         */
+        // 작성자 검증: 요청에 담긴 userId와 게시글 작성자의 id가 일치하는지 확인
+        if (!post.getUser().getId().equals(request.userId())) {
+            throw new UnauthorizedException("작성자만 수정할 수 있습니다.");
+        }
+
         post.update(
                 request.title(),
                 request.content(),
@@ -74,10 +84,22 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+        // 작성자 검증: 전달된 userId와 게시글 작성자의 id가 일치하는지 확인
+        if (!post.getUser().getId().equals(userId)) {
+            throw new UnauthorizedException("작성자만 삭제할 수 있습니다.");
+        }
         postRepository.delete(post);
+    }
+
+    //뉴스피드 조회: 생성일 내림차순 정렬, 페이지당 10개
+    @Transactional(readOnly = true)
+    public Page<PostResponse> getNewsfeed(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+        return postRepository.findAll(pageable)
+                .map(this::mapToResponse);
     }
 
     private PostResponse mapToResponse(Post post) {
@@ -91,9 +113,9 @@ public class PostService {
                 post.getUpdatedAt()
         );
     }
-  
-   @Transactional(readOnly = true)
-   public List<PostResponse> getPostByUserId(Long userId){
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostByUserId(Long userId) {
         List<Post> posts = postRepository.findByUserId_Id(userId);
         return posts.stream()
                 .map(this::mapToResponse)
