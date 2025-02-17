@@ -28,24 +28,40 @@ public class PostController {
     //뉴스피드 게시글 조회
     //친구 게시글만 최신순으로 가져옴
     @GetMapping
-    public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Page<Post>> findAllPosts(@RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "10") int size,
                                                   @RequestParam Long userId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
         Page<Post> posts = postService.findAllPosts(pageable, userId);
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        return ResponseEntity.ok(posts);
     }
 
     //뉴스피드 전체 게시글 조회
     //시작일과 종료일 기준
-    @GetMapping("/sort")
-    public ResponseEntity<Page<Post>> getPostsByStartAndEnd(@RequestParam(defaultValue = "0") int page,
+    @GetMapping("/sort/period")
+    public ResponseEntity<Page<Post>> findPostsByStartAndEnd(@RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "10") int size,
                                                             @RequestParam LocalDateTime startDate,
                                                             @RequestParam LocalDateTime endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
         Page<Post> posts = postService.findAllPostsByStartAndEnd(pageable, startDate, endDate);
-        return new ResponseEntity<>(posts,HttpStatus.OK);
+        return ResponseEntity.ok(posts);
+    }
+
+    //뉴스피드 전체 게시글 조회
+    //좋아요 수 기준
+    @GetMapping("/sort/likes")
+    public ResponseEntity<Page<Post>> findPostsByLikes(@RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "10") int size,
+                                                      @PathVariable("postId") Long postId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Page<Post> posts = postService.findAllPostsByLikes(pageable, postId);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponse> findPost(@PathVariable Long postId) {
+        return ResponseEntity.ok(postService.findPostById(postId));
     }
 
     @PostMapping
