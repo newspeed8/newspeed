@@ -25,7 +25,6 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    //뉴스피드 전체 게시글 조회
     //뉴스피드 게시글 조회
     //친구 게시글만 최신순으로 가져옴
     @GetMapping
