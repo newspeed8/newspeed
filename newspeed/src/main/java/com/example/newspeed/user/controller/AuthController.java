@@ -28,4 +28,18 @@ public class AuthController {
         session.setAttribute(Const.LOGIN_USER, result.getUserId());
         return ResponseEntity.ok("로그인 성공");
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            HttpServletRequest request
+    ) {
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            session.invalidate();
+        }
+
+        return ResponseEntity.ok("로그아웃에 성공했습니다.");
+    }
+
+
 }
