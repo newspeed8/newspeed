@@ -2,15 +2,21 @@ package com.example.newspeed.post.controller;
 
 import com.example.newspeed.post.dto.request.PostRequest;
 import com.example.newspeed.post.dto.response.PostResponse;
+import com.example.newspeed.post.entity.Post;
 import com.example.newspeed.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -19,14 +25,27 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    //뉴스피드 게시글 조회
+    //친구 게시글만 최신순으로 가져옴
     @GetMapping
-    public ResponseEntity<List<PostResponse>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "10") int size,
+                                                  @RequestParam Long userId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Page<Post> posts = postService.findAllPosts(pageable, userId);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostResponse> getPost(@PathVariable("postId") Long postId) {
-        return ResponseEntity.ok(postService.getPostById(postId));
+    //뉴스피드 전체 게시글 조회
+    //시작일과 종료일 기준
+    @GetMapping("/sort")
+    public ResponseEntity<Page<Post>> getPostsByStartAndEnd(@RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "10") int size,
+                                                            @RequestParam LocalDateTime startDate,
+                                                            @RequestParam LocalDateTime endDate) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Page<Post> posts = postService.findAllPostsByStartAndEnd(pageable, startDate, endDate);
+        return new ResponseEntity<>(posts,HttpStatus.OK);
     }
 
     @PostMapping
@@ -34,28 +53,18 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(request));
     }
 
-    //수정 시, PostRequest에 포함된 userId를 통해 작성자 검증
     @PutMapping("/{postId}")
-    public ResponseEntity<PostResponse> updatePost(@PathVariable("postId") Long postId,
-                                                   @RequestBody @Valid PostRequest request) {
+    public ResponseEntity<PostResponse> updatePost(@PathVariable("postId") Long postId, @RequestBody @Valid PostRequest request) {
         return ResponseEntity.ok(postService.updatePost(postId, request));
     }
 
-    //삭제 시, URL 파라미터로 userId를 함께 전달 (예: /posts/1?userId=123)
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId,
-                                           @RequestParam Long userId) {
-        postService.deletePost(postId, userId);
+    public ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId) {
+        postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
 
-    //뉴스피드 조회: 생성일 내림차순 정렬, 페이지당 10개씩
-    @GetMapping("/newsfeed")
-    public ResponseEntity<Page<PostResponse>> getNewsfeed(@RequestParam(defaultValue = "0") int page) {
-        return ResponseEntity.ok(postService.getNewsfeed(page));
-    }
-
-    //유효성 검사 실패 핸들러
+    //유효성 검사 실패
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()

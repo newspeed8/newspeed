@@ -26,13 +26,13 @@ public class UserController {
     }
 
     //유저 전체 조회
-    @GetMapping("/users")
+    @GetMapping("/users/findall")
     public ResponseEntity<List<UserResponseDto>> findAll() {
         return ResponseEntity.ok(userService.findAll());
     }
 
     //id를 통한 유저 단건 조회
-    @GetMapping("/users/{id}")
+    @GetMapping("/users/find/{id}")
     public ResponseEntity<UserResponseDto> findOne(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.findOne(id));
     }
