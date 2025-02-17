@@ -34,6 +34,11 @@ public class PostService {
         return postRepository.findAllByUpdatedAtBetweenOrderByUpdatedAt(pageable, startDate, endDate);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Post> findAllPostsByLikes(Pageable pageable, Long postId) {
+        return postRepository.findAllByLikeCount(pageable, postId);
+    }
+
     public PostResponse findPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
@@ -100,7 +105,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponse> getPostByUserId(Long userId) {
-        List<Post> posts = postRepository.findByUserId_Id(userId);
+        List<Post> posts = postRepository.findByUserId(userId);
         return posts.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
