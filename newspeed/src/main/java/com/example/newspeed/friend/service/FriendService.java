@@ -1,8 +1,8 @@
 package com.example.newspeed.friend.service;
 
-import com.example.newspeed.friend.status.FriendStatus;
 import com.example.newspeed.friend.entity.Friend;
 import com.example.newspeed.friend.repository.FriendRepository;
+import com.example.newspeed.friend.status.FriendStatus;
 import com.example.newspeed.user.entity.User;
 import com.example.newspeed.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,9 +38,9 @@ public class FriendService {
     }
 
     public void removeFriend(Long requesterId, Long receiverId) {
-        User requester = userRepository.findById(requesterId)
+        userRepository.findById(requesterId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자 아이디입니다"));
-        User receiver = userRepository.findById(receiverId)
+        userRepository.findById(receiverId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자 아이디입니다"));
         Friend friend = friendRepository.findByRequesterIdAndReceiverId(requesterId, receiverId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 친구 관계입니다"));

@@ -19,9 +19,11 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    //뉴스피드 전체 게시글 조회
+    //친구 게시글 최신순으로 가져옴
     @GetMapping
-    public ResponseEntity<List<PostResponse>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public ResponseEntity<List<PostResponse>> getAllPosts(@RequestParam Long userId) {
+        return ResponseEntity.ok(postService.getAllPosts(userId));
     }
 
     @GetMapping("/{postId}")

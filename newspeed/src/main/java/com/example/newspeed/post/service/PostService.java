@@ -22,11 +22,12 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPosts() {
-        return postRepository.findAll().stream()
+    public List<PostResponse> getAllPosts(Long userId) {
+        return postRepository.findFriendPostsByUserId(userId).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+
 
     public PostResponse getPostById(Long postId) {
         Post post = postRepository.findById(postId)
@@ -91,9 +92,9 @@ public class PostService {
                 post.getUpdatedAt()
         );
     }
-  
-   @Transactional(readOnly = true)
-   public List<PostResponse> getPostByUserId(Long userId){
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostByUserId(Long userId) {
         List<Post> posts = postRepository.findByUserId_Id(userId);
         return posts.stream()
                 .map(this::mapToResponse)
