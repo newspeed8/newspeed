@@ -13,7 +13,7 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
 
-    //
+    //유저 아이디로 친구 게시물 조회
     @Query("""
     SELECT p FROM Post p
     JOIN Friend f ON p.user.id = f.requester.id
@@ -22,6 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     ORDER BY p.createdAt DESC
     """)
     Page<Post> findFriendPostsByUserId(Pageable pageable, @Param("userId") Long userId);
+    //수정일 기준 시작일과 종료일로 게시물 조회
     Page<Post> findAllByUpdatedAtBetweenOrderByUpdatedAt(Pageable pageable, LocalDateTime startDate, LocalDateTime endDate);
     // 유저 ID로 모든 게시물을 조회하는 메소드
     List<Post> findByUserId_Id(Long userId);
