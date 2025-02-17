@@ -23,18 +23,20 @@ public class ProfileController {
     private final ProfileService profileService;
 
     //유저 비밀번호 변경
-    @PutMapping("/users/{id}/username")
+    @PutMapping("/users/{id}/password")
     public ResponseEntity<UserResponseDto> updatePassword(
-            @SessionAttribute(name = Const.LOGIN_USER) Long id,
+            @PathVariable("id") Long id,
+//            @SessionAttribute(name = Const.LOGIN_USER) Long id,
             @RequestBody UserPasswordUpdateRequestDto dto
     ) {
         return ResponseEntity.ok(profileService.updatePassword(id, dto.getOldPassword(), dto.getNewPassword()));
     }
 
     //유저 이름 변경
-    @PutMapping("/users/{id}/password")
+    @PutMapping("/users/{id}/username")
     public ResponseEntity<UserResponseDto> updateUserName(
-            @SessionAttribute(name = Const.LOGIN_USER) Long id,
+            @PathVariable("id") Long id,
+//            @SessionAttribute(name = Const.LOGIN_USER) Long id,
             @RequestBody UserUserNameUpdateRequestDto dto
     ) {
         return ResponseEntity.ok(profileService.updateUserName(id, dto.getNewUserName()));
@@ -42,17 +44,20 @@ public class ProfileController {
 
     //유저 삭제
     @DeleteMapping("/users/{id}")
-    public void deleteUser(HttpServletRequest request){
-        HttpSession session = request.getSession(false);
-        Long id = (Long) session.getAttribute(Const.LOGIN_USER);
+    public void deleteUser(
+            @PathVariable("id") Long id
+//            HttpServletRequest request
+    ){
+//        HttpSession session = request.getSession(false);
+//        Long id = (Long) session.getAttribute(Const.LOGIN_USER);
         profileService.deleteUserById(id);
-        session.invalidate();
+//        session.invalidate();
     }
 
     // 유저 작성 게시물 전체 조회
-    @GetMapping("/posts/{userId}")
-    public ResponseEntity<List<PostResponse>> getUserPosts(@PathVariable Long userId){
-        List<PostResponse> posts = profileService.getUserPosts(userId);
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<List<PostResponse>> getUserPosts(@PathVariable("id") Long id){
+        List<PostResponse> posts = profileService.getUserPosts(id);
         return ResponseEntity.ok(posts);
     }
 
