@@ -9,11 +9,14 @@ import com.example.newspeed.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,17 +27,14 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    // 뉴스피드 조회 - 내림차순 + 페이징(10개)
     @Transactional(readOnly = true)
-    public Page<Post> findAllPosts(Pageable pageable, Long userId) {
-        return postRepository.findFriendPostsByUserId(pageable, userId);
+    public Page<PostResponse> getAllPosts(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return postRepository.findAll(pageable).map(this::mapToResponse);
     }
 
-    @Transactional(readOnly = true)
-    public Page<Post> findAllPostsByStartAndEnd(Pageable pageable, LocalDateTime startDate, LocalDateTime endDate) {
-        return postRepository.findAllByUpdatedAtBetweenOrderByUpdatedAt(pageable, startDate, endDate);
-    }
-
-    public PostResponse findPostById(Long postId) {
+    public PostResponse getPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
         return mapToResponse(post);
@@ -58,7 +58,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse updatePost(Long postId, PostRequest request) {
+    public PostResponse updatePost(Long postId,Long userId, PostRequest request) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
 
@@ -70,19 +70,30 @@ public class PostService {
         post.setNickname2(request.nickname2());
         //이런식으로 필드별 직접 변경이 가능하나, 그냥 메서드로 빼내서 활용했음.
         */
+
+
+        // 작성자 확인
+        if (!post.isOwner(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "작성자만 수정할 수 있습니다.");
+        }
+
         post.update(
                 request.title(),
                 request.content(),
                 request.imageUrl(),
                 request.nickname2()
         );
+
         return mapToResponse(post);
     }
 
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+        if (!post.isOwner(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "작성자만 삭제할 수 있습니다.");
+        }
         postRepository.delete(post);
     }
 

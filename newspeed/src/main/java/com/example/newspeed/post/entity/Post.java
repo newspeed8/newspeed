@@ -49,4 +49,9 @@ public class Post extends BaseEntity {
         this.imageUrl = imageUrl;
         this.nickname2 = nickname2;
     }
+
+    // 작성자 확인
+    public boolean isOwner(Long userId) {
+        return this.user.getId().equals(userId);
+    }
 }
