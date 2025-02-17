@@ -25,11 +25,11 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public void updatePassword(String password){
-        this.password = password;
+    public void updatePassword(String newPassword){
+        this.password = newPassword;
     }
 
-    public void updateUserName(String userName){
-        this.userName = userName;
+    public void updateUserName(String newUserName){
+        this.userName = newUserName;
     }
 }

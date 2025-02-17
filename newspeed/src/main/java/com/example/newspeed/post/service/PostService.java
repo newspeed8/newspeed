@@ -28,7 +28,6 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public PostResponse getPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
@@ -92,4 +91,13 @@ public class PostService {
                 post.getUpdatedAt()
         );
     }
+  
+   @Transactional(readOnly = true)
+   public List<PostResponse> getPostByUserId(Long userId){
+        List<Post> posts = postRepository.findByUserId_Id(userId);
+        return posts.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
 }

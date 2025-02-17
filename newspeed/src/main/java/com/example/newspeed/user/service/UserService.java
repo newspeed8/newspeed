@@ -61,45 +61,5 @@ public class UserService {
                 user.getEmail(),
                 user.getPassword());
     }
-
-    @Transactional
-    public UserResponseDto updatePassword(Long id, String oldPassword, String newPassword) {
-        User user=userRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-
-        //기존 비밀번호를 틀리게 작성할 경우 에러 발생
-        if(!passwordEncoder.matches(oldPassword,user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"기존 비밀번호가 일치하지 않습니다.");
-        }
-
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        //변경된 비밀번호로 저장
-        user.updatePassword(encodedPassword);
-
-        return new UserResponseDto(
-                user.getId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.getPassword());
-    }
-
-    @Transactional
-    public UserResponseDto updateUserName(Long id, String newUserName) {
-        User user=userRepository.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-
-        //변경된 유저 이름 저장
-        user.updateUserName(newUserName);
-
-        return new UserResponseDto(
-                user.getId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.getPassword());
-    }
-
-    @Transactional
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
-    }
+// --------- 프로필 서비스로 이동 ----------
 }
