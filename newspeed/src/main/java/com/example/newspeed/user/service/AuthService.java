@@ -1,5 +1,6 @@
 package com.example.newspeed.user.service;
 
+import com.example.newspeed.common.config.PasswordEncoder;
 import com.example.newspeed.exception.InvalidCredentialException;
 import com.example.newspeed.user.dto.request.UserLoginRequestDto;
 import com.example.newspeed.user.dto.response.UserLoginResponseDto;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public UserLoginResponseDto login(UserLoginRequestDto dto) {
@@ -21,12 +23,7 @@ public class AuthService {
                 () -> new InvalidCredentialException("이메일이 존재하지 않습니다.")
         );
 
-        String password = dto.getPassword();
-        if (password == null) {
-            throw new InvalidCredentialException("비밀번호를 입력해주세요.");
-        }
-
-        if (!password.equals(user.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new InvalidCredentialException("비밀번호가 틀렸습니다.");
         }
         return new UserLoginResponseDto(user.getId());
