@@ -4,6 +4,7 @@ import com.example.newspeed.friend.dto.FriendResponseDto;
 import com.example.newspeed.friend.entity.Friend;
 import com.example.newspeed.friend.repository.FriendRepository;
 import com.example.newspeed.friend.status.FriendStatus;
+import com.example.newspeed.user.dto.response.UserResponse;
 import com.example.newspeed.user.entity.User;
 import com.example.newspeed.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -48,5 +52,12 @@ public class FriendService {
         Friend friend = friendRepository.findByRequesterIdAndReceiverId(requesterId, receiverId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 친구 관계입니다"));
         friendRepository.delete(friend);
+    }
+
+    public List<UserResponse> friendList(Long userId){
+        List<Friend> friends = friendRepository.findAcceptedFriend(userId);
+
+        return friends.stream().map(f -> new UserResponse(f.getRequester().getId().equals(userId) ? f.getReceiver() : f.getRequester()))
+                .collect(Collectors.toList());
     }
 }
