@@ -5,6 +5,7 @@ import com.example.newspeed.comment.dto.request.CommentUpdateRequestDto;
 import com.example.newspeed.comment.dto.response.CommentResponseDto;
 import com.example.newspeed.comment.entity.Comment;
 import com.example.newspeed.comment.repository.CommentRepository;
+import com.example.newspeed.like.repository.LikeRepository;
 import com.example.newspeed.post.entity.Post;
 import com.example.newspeed.post.repository.PostRepository;
 import com.example.newspeed.user.entity.User;
@@ -22,6 +23,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final LikeRepository likeRepository;
 
     @Transactional
     public CommentResponseDto save(Long userId, Long postId, CommentSaveRequestDto dto) {
@@ -47,7 +49,8 @@ public class CommentService {
                         comment.getId(),
                         comment.getUser().getId(),
                         comment.getPost().getPostId(),
-                        comment.getContent()))
+                        comment.getContent(),
+                        likeRepository.countByComment(comment)))
                 .collect(Collectors.toList());
     }
 
@@ -60,7 +63,8 @@ public class CommentService {
                 comment.getId(),
                 comment.getUser().getId(),
                 comment.getPost().getPostId(),
-                comment.getContent());
+                comment.getContent(),
+                likeRepository.countByComment(comment));
     }
 
     @Transactional
