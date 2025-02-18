@@ -52,10 +52,9 @@ public class PostController {
     //좋아요 수 기준
     @GetMapping("/sort/likes")
     public ResponseEntity<Page<Post>> findPostsByLikes(@RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "10") int size,
-                                                      @PathVariable("postId") Long postId) {
+                                                      @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
-        Page<Post> posts = postService.findAllPostsByLikes(pageable, postId);
+        Page<Post> posts = postService.findAllPostsByLikes(pageable);
         return ResponseEntity.ok(posts);
     }
 
