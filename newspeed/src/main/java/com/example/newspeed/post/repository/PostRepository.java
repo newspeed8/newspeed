@@ -17,7 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
     SELECT p FROM Post p
     JOIN Friend f ON p.user.id = f.requester.id
-    WHERE p.user.id = :uerId
+    WHERE p.user.id = :userId
     AND f.status = 'ACCEPTED'
     ORDER BY p.createdAt DESC
     """)
