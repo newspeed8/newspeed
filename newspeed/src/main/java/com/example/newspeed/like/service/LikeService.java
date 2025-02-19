@@ -48,7 +48,7 @@ public class LikeService {
             liked = true; // 좋아요 추가됨
         }
 
-        int likeCount = likeRepository.countByPost(post); // 좋아요 개수 가져오기
+        int likeCount = post.getLikeCount(); // 좋아요 개수 가져오기
         return new LikeResponseDto(postId, liked, likeCount);
     }
 
@@ -77,7 +77,7 @@ public class LikeService {
             liked = true;
         }
 
-        int likeCount = likeRepository.countByComment(comment);
+        int likeCount = comment.getLikeCount();
         return new LikeResponseDto(commentId, liked, likeCount);
     }
 }
