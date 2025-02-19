@@ -3,10 +3,12 @@ package com.example.newspeed.profile.controller;
 import com.example.newspeed.friend.service.FriendService;
 import com.example.newspeed.post.dto.response.PostResponse;
 import com.example.newspeed.profile.service.ProfileService;
+import com.example.newspeed.user.dto.request.DeletePassword;
 import com.example.newspeed.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.newspeed.user.dto.request.UserUserNameUpdateRequestDto;
 import com.example.newspeed.user.dto.response.UserResponse;
 import com.example.newspeed.user.dto.response.UserResponseDto;
+import com.example.newspeed.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,9 +45,10 @@ public class ProfileController {
     //유저 삭제
     @DeleteMapping("/users/{id}")
     public void deleteUser(
-            @PathVariable("id") Long id
-    ){
-        profileService.deleteUserById(id);
+            @PathVariable("id") Long id,
+            @RequestBody DeletePassword deleteDto
+            ){
+        profileService.deleteUserById(id, deleteDto);
     }
 
     // 유저 작성 게시물 전체 조회
