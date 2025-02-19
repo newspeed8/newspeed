@@ -39,16 +39,12 @@ public class FriendService {
     public FriendResponseDto acceptFriendRequest(Long requesterId) {
         Friend friend = friendRepository.findById(requesterId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 친구 요청입니다"));
-        friend.setStatus(FriendStatus.ACCEPTED);
+        friend.accept();
         Friend savedFriend = friendRepository.save(friend);
         return FriendResponseDto.toDto(savedFriend);
     }
 
     public void removeFriend(Long requesterId, Long receiverId) {
-        userRepository.findById(requesterId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자 아이디입니다"));
-        userRepository.findById(receiverId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자 아이디입니다"));
         Friend friend = friendRepository.findByRequesterIdAndReceiverId(requesterId, receiverId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 친구 관계입니다"));
         friendRepository.delete(friend);

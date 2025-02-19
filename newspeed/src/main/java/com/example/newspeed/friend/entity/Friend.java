@@ -26,7 +26,6 @@ public class Friend extends BaseEntity {
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
-    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FriendStatus status = FriendStatus.PENDING;
@@ -35,5 +34,9 @@ public class Friend extends BaseEntity {
         this.requester = requester;
         this.receiver = receiver;
         this.status = status;
+    }
+
+    public void accept() {
+        this.status = FriendStatus.ACCEPTED;
     }
 }
