@@ -5,6 +5,7 @@ import com.example.newspeed.comment.dto.request.CommentUpdateRequestDto;
 import com.example.newspeed.comment.dto.response.CommentResponseDto;
 import com.example.newspeed.comment.service.CommentService;
 import com.example.newspeed.common.jwt.JwtUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> save(
             @RequestHeader("Authorization") String token,
             @PathVariable Long postId,
-            @RequestBody CommentSaveRequestDto dto
+            @RequestBody @Valid CommentSaveRequestDto dto
             ){
         Long userId=jwtUtil.getUserIdFromJwtToken(token);
         return ResponseEntity.ok(commentService.save(userId, postId, dto));
