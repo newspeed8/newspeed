@@ -36,8 +36,7 @@ public class UserService {
         return new UserResponseDto(
                 user.getId(),
                 user.getUserName(),
-                user.getEmail(),
-                user.getPassword());
+                user.getEmail());
     }
 
     @Transactional(readOnly = true)
