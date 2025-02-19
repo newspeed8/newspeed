@@ -34,6 +34,8 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private String nickname2;
 
+    private int likeCount;
+
     public Post(String title, String content, String imageUrl, String nickname2, User user) {
         this.title = title;
         this.content = content;
@@ -48,5 +50,15 @@ public class Post extends BaseEntity {
         this.content = content;
         this.imageUrl = imageUrl;
         this.nickname2 = nickname2;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if(likeCount > 0) {
+            this.likeCount--;
+        }
     }
 }
