@@ -23,7 +23,7 @@ public class CommentController {
             @RequestHeader("Authorization") String token,
             @PathVariable Long postId,
             @RequestBody CommentSaveRequestDto dto
-            ){
+    ){
         Long userId=jwtUtil.getUserIdFromJwtToken(token);
         return ResponseEntity.ok(commentService.save(userId, postId, dto));
     }
