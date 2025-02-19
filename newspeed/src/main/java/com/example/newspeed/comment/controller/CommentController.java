@@ -17,6 +17,7 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
     private final JwtUtil jwtUtil;
+
     //밑의 기능들은 로그인을 한 후에 실행 가능
     //댓글 작성
     @PostMapping("/posts/{postId}/comments")
@@ -24,20 +25,24 @@ public class CommentController {
             @RequestHeader("Authorization") String token,
             @PathVariable Long postId,
             @RequestBody @Valid CommentSaveRequestDto dto
-            ){
-        Long userId=jwtUtil.getUserIdFromJwtToken(token);
+    ) {
+        // Bearer 접두사 있으면 제거
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        Long userId = jwtUtil.getUserIdFromJwtToken(token);
         return ResponseEntity.ok(commentService.save(userId, postId, dto));
     }
 
     //댓글 조회
     @GetMapping("/posts/{postId}/comments")
-    public ResponseEntity<List<CommentResponseDto>> findByPost(@PathVariable Long postId){
+    public ResponseEntity<List<CommentResponseDto>> findByPost(@PathVariable Long postId) {
         return ResponseEntity.ok(commentService.findByPost(postId));
     }
 
     //댓글 단건 조회
     @GetMapping("/comments/{id}")
-    public ResponseEntity<CommentResponseDto> findOne(@PathVariable Long id){
+    public ResponseEntity<CommentResponseDto> findOne(@PathVariable Long id) {
         return ResponseEntity.ok(commentService.findOne(id));
     }
 
@@ -47,8 +52,8 @@ public class CommentController {
             @RequestHeader("Authorization") String token,
             @PathVariable Long id,
             @RequestBody CommentUpdateRequestDto dto
-    ){
-        Long userId=jwtUtil.getUserIdFromJwtToken(token);
+    ) {
+        Long userId = jwtUtil.getUserIdFromJwtToken(token);
         return ResponseEntity.ok(commentService.update(id, userId, dto));
     }
 
@@ -56,8 +61,8 @@ public class CommentController {
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<CommentResponseDto> delete(
             @RequestHeader("Authorization") String token,
-            @PathVariable Long id){
-        Long userId=jwtUtil.getUserIdFromJwtToken(token);
+            @PathVariable Long id) {
+        Long userId = jwtUtil.getUserIdFromJwtToken(token);
         commentService.delete(id, userId);
         return ResponseEntity.ok().build();
     }

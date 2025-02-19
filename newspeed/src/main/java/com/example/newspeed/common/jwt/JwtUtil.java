@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -26,13 +27,14 @@ public class JwtUtil {
 //                .signWith(SignatureAlgorithm.HS512, jwtSecret)
 //                .compact();
 //    }
-    public String generateJwtToken(String email,Long userId) {
+    public String generateJwtToken(String email, Long userId) {
+        Key signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
                 .setSubject(email)
                 .claim("userId", userId.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS512)
+                .signWith(signingKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -44,12 +46,34 @@ public class JwtUtil {
                 .getSubject();
     }
 
+    //    public Long getUserIdFromJwtToken(String token) {
+//        // Bearer 접두사 있으면 제거
+//        if(token.startsWith("Bearer ")) {
+//            token = token.substring(7);
+//        }
+//        String userIdStr = Jwts.parser()
+//                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .get("userId", String.class);
+//        return Long.parseLong(userIdStr);
+//    }
     public Long getUserIdFromJwtToken(String token) {
-        String userIdStr = Jwts.parser()
+        // Bearer 접두사 있으면 제거
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        Claims claims = Jwts.parser()
                 .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
                 .parseClaimsJws(token)
-                .getBody()
-                .get("userId", String.class);
+                .getBody();
+
+        String userIdStr = claims.get("userId", String.class);
+        System.out.println("추출된 userId 클레임: " + userIdStr);
+
+        if (userIdStr == null) {
+            throw new IllegalArgumentException("jwt 톹큰에 userId 클레임이 없어요");
+        }
         return Long.parseLong(userIdStr);
     }
 
