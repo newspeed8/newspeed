@@ -43,6 +43,15 @@ public class JwtUtil {
                 .getSubject();
     }
 
+    public Long getUserIdFromJwtToken(String token) {
+        String userIdStr = Jwts.parser()
+                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", String.class);
+        return Long.parseLong(userIdStr);
+    }
+
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parser()
