@@ -25,7 +25,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private int likeCount;
+    private int likeCount = 0;
 
     public Comment(Post post, User user, String content){
         this.post = post;

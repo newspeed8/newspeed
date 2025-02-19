@@ -5,7 +5,6 @@ import com.example.newspeed.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "post")
@@ -34,7 +33,7 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private String nickname2;
 
-    private int likeCount;
+    private int likeCount = 0;
 
     public Post(String title, String content, String imageUrl, String nickname2, User user) {
         this.title = title;
