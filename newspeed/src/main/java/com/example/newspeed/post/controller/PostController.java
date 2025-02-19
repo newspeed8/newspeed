@@ -27,8 +27,12 @@ public class PostController {
 
     // 전체 게시글 조회
     @GetMapping("/all")
-    public ResponseEntity<List<PostResponse>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public ResponseEntity<Page<PostResponse>> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<PostResponse> posts = postService.getAllPosts(pageable);
+        return ResponseEntity.ok(posts);
     }
 
     //뉴스피드 게시글 조회
