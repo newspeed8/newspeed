@@ -25,14 +25,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     //수정일 기준 시작일과 종료일로 게시물 조회
     Page<Post> findAllByUpdatedAtBetweenOrderByUpdatedAt(Pageable pageable, LocalDateTime startDate, LocalDateTime endDate);
     //좋아요 기준 게시물 조회
-    @Query("""
-    SELECT p
-    FROM Post p
-    LEFT JOIN Like l ON p.postId = l.post.postId
-    GROUP BY p.postId
-    ORDER BY COUNT(l) DESC, p.updatedAt DESC
-    """)
-    Page<Post> findAllByLikeCount(Pageable pageable);
+    Page<Post> findAllByLikeCountOrderByLikeCountDescUpdatedAtDesc(Pageable pageable);
     // 유저 ID로 모든 게시물을 조회하는 메소드
     List<Post> findByUserId(Long userId);
 }
