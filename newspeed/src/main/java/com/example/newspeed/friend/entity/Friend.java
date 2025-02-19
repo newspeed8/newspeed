@@ -6,7 +6,6 @@ import com.example.newspeed.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Table(name = "friend")
