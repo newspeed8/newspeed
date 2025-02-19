@@ -2,6 +2,7 @@ package com.example.newspeed.friend.repository;
 
 import com.example.newspeed.friend.entity.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,4 +19,11 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
         AND f.status = 'ACCEPTED'
         """)
         List<Friend> findAcceptedFriend(@Param("userId") Long userId);
+
+        // 삭제하는 유저와 친구인 사람 삭제(관계를 삭제)
+        @Modifying
+        @Query("""
+        DELETE FROM Friend f WHERE (f.requester.id = :userId AND f.receiver.id = :friendId) OR (f.requester.id = :friendId AND f.receiver.id = :userId)
+        """)
+        void deleteByUserIdAndFriendId(@Param("userId") Long userId, @Param("friendId") Long friendId);
 }

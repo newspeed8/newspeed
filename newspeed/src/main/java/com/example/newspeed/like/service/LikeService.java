@@ -40,9 +40,11 @@ public class LikeService {
         Optional<Like> existingLike = likeRepository.findByUserAndPost(user, post);
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
+            post.decreaseLikeCount();
             liked = false; // 좋아요 취소됨
         } else {
             likeRepository.save(new Like(user, post));
+            post.increaseLikeCount();
             liked = true; // 좋아요 추가됨
         }
 
@@ -67,9 +69,11 @@ public class LikeService {
 
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
+            comment.decreaseLikeCount();
             liked = false;
         } else {
             likeRepository.save(new Like(user, comment));
+            comment.increaseLikeCount();
             liked = true;
         }
 

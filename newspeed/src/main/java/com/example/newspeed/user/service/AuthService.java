@@ -18,15 +18,13 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public UserLoginResponseDto login(UserLoginRequestDto dto) {
-        User user = userRepository.findByEmail(dto.getEmail()).orElseThrow(
-                () -> new InvalidCredentialException("이메일이 존재하지 않습니다.")
-        );
+    public User login(UserLoginRequestDto dto) {
+        User user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new InvalidCredentialException("이메일이 존재하지 않습니다."));
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new InvalidCredentialException("비밀번호가 틀렸습니다.");
         }
-        return new UserLoginResponseDto(user.getId());
+        return user;
     }
-
 }

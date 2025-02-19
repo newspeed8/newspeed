@@ -3,6 +3,7 @@ package com.example.newspeed.user.service;
 import com.example.newspeed.common.config.PasswordEncoder;
 import com.example.newspeed.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.newspeed.user.dto.request.UserSaveRequestDto;
+import com.example.newspeed.user.dto.response.UserResponse;
 import com.example.newspeed.user.dto.response.UserResponseDto;
 import com.example.newspeed.user.entity.User;
 import com.example.newspeed.user.repository.UserRepository;
@@ -35,31 +36,27 @@ public class UserService {
         return new UserResponseDto(
                 user.getId(),
                 user.getUserName(),
-                user.getEmail(),
-                user.getPassword());
+                user.getEmail());
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDto> findAll() {
+    public List<UserResponse> findAll() {
         return userRepository.findAll().stream()
-                .map(user->new UserResponseDto(
+                .map(user->new UserResponse(
                         user.getId(),
                         user.getUserName(),
-                        user.getEmail(),
-                        user.getPassword()))
+                        user.getEmail()))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDto findOne(Long id) {
+    public UserResponse findOne(Long id) {
         User user= userRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
-        return new UserResponseDto(
+        return new UserResponse(
                 user.getId(),
                 user.getUserName(),
-                user.getEmail(),
-                user.getPassword());
+                user.getEmail());
     }
-// --------- 프로필 서비스로 이동 ----------
 }
