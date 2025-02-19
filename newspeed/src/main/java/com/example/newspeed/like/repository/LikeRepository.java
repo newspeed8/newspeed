@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
     Optional<Like> findByUserAndPost(User user, Post post);
+    Optional<Like> findByUserAndComment(User user, Comment comment);
 
     int countByPost(Post post); // 좋아요 개수 조회
-
     int countByComment(Comment comment); // 댓글 좋아요 개수 조회
 }
 
