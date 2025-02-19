@@ -14,4 +14,10 @@ public class UserResponse {
         this.userName = user.getUserName();
         this.email = user.getEmail();
     }
+
+    public UserResponse(Long id, String userName, String email) {
+        this.id = id;
+        this.userName = userName;
+        this.email = email;
+    }
 }
