@@ -26,9 +26,10 @@ public class JwtUtil {
 //                .signWith(SignatureAlgorithm.HS512, jwtSecret)
 //                .compact();
 //    }
-    public String generateJwtToken(String email) {
+    public String generateJwtToken(String email,Long userId) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("userId", userId.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS512)

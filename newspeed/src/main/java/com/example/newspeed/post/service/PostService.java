@@ -44,8 +44,9 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public Page<Post> findAllPostsByLikes(Pageable pageable) {
-        return postRepository.findAllByLikeCount(pageable);
+        return postRepository.findAllByOrderByLikeCountDescUpdatedAtDesc(pageable);
     }
+
 
     public PostResponse findPostById(Long postId) {
         Post post = postRepository.findById(postId)
