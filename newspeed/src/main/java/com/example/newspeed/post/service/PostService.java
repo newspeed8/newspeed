@@ -24,6 +24,14 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+
+
+    public List<PostResponse> getAllPosts() {
+        return postRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
     @Transactional(readOnly = true)
     public Page<Post> findAllPosts(Pageable pageable, Long userId) {
         return postRepository.findFriendPostsByUserId(pageable, userId);
