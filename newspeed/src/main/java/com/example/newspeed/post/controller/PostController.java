@@ -41,7 +41,7 @@ public class PostController {
     public ResponseEntity<Page<Post>> findAllPosts(@RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "10") int size,
                                                    @RequestParam Long userId) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
         Page<Post> posts = postService.findAllPosts(pageable, userId);
         return ResponseEntity.ok(posts);
     }
@@ -53,7 +53,7 @@ public class PostController {
                                                              @RequestParam(defaultValue = "10") int size,
                                                              @RequestParam LocalDateTime startDate,
                                                              @RequestParam LocalDateTime endDate) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
         Page<Post> posts = postService.findAllPostsByStartAndEnd(pageable, startDate, endDate);
         return ResponseEntity.ok(posts);
     }
@@ -63,7 +63,7 @@ public class PostController {
     @GetMapping("/sort/likes")
     public ResponseEntity<Page<Post>> findPostsByLikes(@RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
         Page<Post> posts = postService.findAllPostsByLikes(pageable);
         return ResponseEntity.ok(posts);
     }
