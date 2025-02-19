@@ -25,12 +25,18 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    // 전체 게시글 조회
+    @GetMapping("/all")
+    public ResponseEntity<List<PostResponse>> getAllPosts() {
+        return ResponseEntity.ok(postService.getAllPosts());
+    }
+
     //뉴스피드 게시글 조회
     //친구 게시글만 최신순으로 가져옴
     @GetMapping
     public ResponseEntity<Page<Post>> findAllPosts(@RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "10") int size,
-                                                  @RequestParam Long userId) {
+                                                   @RequestParam(defaultValue = "10") int size,
+                                                   @RequestParam Long userId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
         Page<Post> posts = postService.findAllPosts(pageable, userId);
         return ResponseEntity.ok(posts);
@@ -40,9 +46,9 @@ public class PostController {
     //시작일과 종료일 기준
     @GetMapping("/sort/period")
     public ResponseEntity<Page<Post>> findPostsByStartAndEnd(@RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "10") int size,
-                                                            @RequestParam LocalDateTime startDate,
-                                                            @RequestParam LocalDateTime endDate) {
+                                                             @RequestParam(defaultValue = "10") int size,
+                                                             @RequestParam LocalDateTime startDate,
+                                                             @RequestParam LocalDateTime endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
         Page<Post> posts = postService.findAllPostsByStartAndEnd(pageable, startDate, endDate);
         return ResponseEntity.ok(posts);
@@ -52,7 +58,7 @@ public class PostController {
     //좋아요 수 기준
     @GetMapping("/sort/likes")
     public ResponseEntity<Page<Post>> findPostsByLikes(@RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "10") int size) {
+                                                       @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
         Page<Post> posts = postService.findAllPostsByLikes(pageable);
         return ResponseEntity.ok(posts);
