@@ -1,8 +1,8 @@
-package com.example.newspeed.user.service;
+package com.example.newspeed.auth.service;
 
+import com.example.newspeed.auth.dto.UserLoginRequestDto;
 import com.example.newspeed.common.config.PasswordEncoder;
 import com.example.newspeed.exception.InvalidCredentialException;
-import com.example.newspeed.user.dto.request.UserLoginRequestDto;
 import com.example.newspeed.user.dto.response.UserLoginResponseDto;
 import com.example.newspeed.user.entity.User;
 import com.example.newspeed.user.repository.UserRepository;

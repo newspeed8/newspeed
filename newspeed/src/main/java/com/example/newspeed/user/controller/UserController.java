@@ -1,14 +1,9 @@
 package com.example.newspeed.user.controller;
 
-import com.example.newspeed.common.consts.Const;
-import com.example.newspeed.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.newspeed.user.dto.request.UserSaveRequestDto;
-import com.example.newspeed.user.dto.request.UserUserNameUpdateRequestDto;
 import com.example.newspeed.user.dto.response.UserResponse;
 import com.example.newspeed.user.dto.response.UserResponseDto;
 import com.example.newspeed.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +17,7 @@ public class UserController {
 
     //유저 저장
     @PostMapping("/users/signup")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody UserSaveRequestDto dto){
+    public ResponseEntity<UserResponseDto> signup(@RequestBody UserSaveRequestDto dto) {
         return ResponseEntity.ok(userService.save(dto));
     }
 

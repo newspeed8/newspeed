@@ -24,8 +24,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-
-
     public List<PostResponse> getAllPosts() {
         return postRepository.findAll().stream()
                 .map(this::mapToResponse)
