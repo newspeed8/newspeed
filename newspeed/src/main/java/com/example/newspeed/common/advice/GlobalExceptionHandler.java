@@ -14,6 +14,11 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGlobalException(Exception ex) {
+        return getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.");
+    }
+
     @ExceptionHandler(InvalidCredentialException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidCredentialException(InvalidCredentialException ex) {
         return getErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
