@@ -1,5 +1,7 @@
-package com.example.newspeed.common.jwt;
+package com.example.newspeed.common.filter;
 
+import com.example.newspeed.common.jwt.UserDetailsService;
+import com.example.newspeed.common.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +21,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final UserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
