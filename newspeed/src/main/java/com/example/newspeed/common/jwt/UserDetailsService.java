@@ -18,7 +18,6 @@ public class UserDetailsService implements org.springframework.security.core.use
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("유저의 이메일을 찾을 수 업습니다.: " + email));
-
         return UserDetailsImpl.build(user);
     }
 }
