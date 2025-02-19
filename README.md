@@ -1,9 +1,34 @@
 ## 뉴스피드 프로잭트
 
+[0. 팀과 팀원 소개](#0-팀과-팀원-소개)
+[1. 개발환경](#1-개발환경)
+[2. 요구사항](#2-요구사항)
+[3. 설계구조](#3-설계구조)
+[4. 업데이트 진행](#4-업데이트-진행)
+
 ### 0. 팀과 팀원 소개
 
-8조/조이름
-팀 노션 캠처 이미지 올리기
+#### 조이름
+
+팀 이름 : 8ameter(미정)
+뜻 : (미정)
+
+![teamImage](newspeed/image/team8.png)
+
+#### 팀장
+
+조민경 https://github.com/JoeMinKyung
+
+#### 팀원
+
+이한빈 https://github.com/lh991117<br>
+문성준 https://github.com/sjMun09<br>
+이승민 https://github.com/Seung-min-88<br>
+이호수 https://github.com/Hokirby
+
+#### 커밋규칙
+
+[commitRules](newspeed/image/commitRules.png)
 
 ### 1. 개발환경
 
@@ -74,18 +99,17 @@
 
 #### 운영 환경 구조
 
-ERD 이미지와 설명
+##### ERD
+![ERD](newspeed/image/team8.png)
+
 API 명세서 이미지와 설명, 노션링크
 
 #### 상세 기능
 
 와이어 프레임 이미지와 화면 단위 설명
 
-### 8. 업데이트 진행
+### 4. 업데이트 진행
 
 주요 commit 정리
 
-
-### 9. 커밋 규칙
-<img width="816" alt="image" src="https://github.com/user-attachments/assets/274783a0-7ba8-4ea8-b910-1c27a96bdad9" />
 
