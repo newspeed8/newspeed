@@ -15,4 +15,6 @@ public class UserResponseDto {
         this.email = email;
         this.password = password;
     }
+
+
 }

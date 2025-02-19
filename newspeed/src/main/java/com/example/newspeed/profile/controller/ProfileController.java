@@ -1,11 +1,15 @@
 package com.example.newspeed.profile.controller;
 
 import com.example.newspeed.common.consts.Const;
+import com.example.newspeed.friend.dto.FriendResponseDto;
+import com.example.newspeed.friend.service.FriendService;
 import com.example.newspeed.post.dto.response.PostResponse;
 import com.example.newspeed.profile.service.ProfileService;
 import com.example.newspeed.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.newspeed.user.dto.request.UserUserNameUpdateRequestDto;
+import com.example.newspeed.user.dto.response.UserResponse;
 import com.example.newspeed.user.dto.response.UserResponseDto;
+import com.example.newspeed.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfileController {
     private final ProfileService profileService;
+    private final FriendService friendService;
 
     //유저 비밀번호 변경
     @PutMapping("/users/{id}/password")
@@ -61,4 +66,10 @@ public class ProfileController {
         return ResponseEntity.ok(posts);
     }
 
+    // 친구 목록
+    @GetMapping("/friends/{id}")
+    public ResponseEntity<List<UserResponse>> friendList(@PathVariable Long id){
+        List<UserResponse> friends = friendService.friendList(id);
+        return ResponseEntity.ok(friends);
+    }
 }

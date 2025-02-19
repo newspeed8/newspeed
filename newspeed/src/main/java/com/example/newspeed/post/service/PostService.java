@@ -8,9 +8,12 @@ import com.example.newspeed.user.entity.User;
 import com.example.newspeed.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,13 +25,21 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPosts() {
-        return postRepository.findAll().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+    public Page<Post> findAllPosts(Pageable pageable, Long userId) {
+        return postRepository.findFriendPostsByUserId(pageable, userId);
     }
 
-    public PostResponse getPostById(Long postId) {
+    @Transactional(readOnly = true)
+    public Page<Post> findAllPostsByStartAndEnd(Pageable pageable, LocalDateTime startDate, LocalDateTime endDate) {
+        return postRepository.findAllByUpdatedAtBetweenOrderByUpdatedAt(pageable, startDate, endDate);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Post> findAllPostsByLikes(Pageable pageable) {
+        return postRepository.findAllByLikeCount(pageable);
+    }
+
+    public PostResponse findPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
         return mapToResponse(post);
@@ -91,10 +102,10 @@ public class PostService {
                 post.getUpdatedAt()
         );
     }
-  
-   @Transactional(readOnly = true)
-   public List<PostResponse> getPostByUserId(Long userId){
-        List<Post> posts = postRepository.findByUserId_Id(userId);
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostByUserId(Long userId) {
+        List<Post> posts = postRepository.findByUserId(userId);
         return posts.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
