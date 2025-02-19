@@ -1,7 +1,5 @@
 package com.example.newspeed.profile.controller;
 
-import com.example.newspeed.common.consts.Const;
-import com.example.newspeed.friend.dto.FriendResponseDto;
 import com.example.newspeed.friend.service.FriendService;
 import com.example.newspeed.post.dto.response.PostResponse;
 import com.example.newspeed.profile.service.ProfileService;
@@ -9,9 +7,6 @@ import com.example.newspeed.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.newspeed.user.dto.request.UserUserNameUpdateRequestDto;
 import com.example.newspeed.user.dto.response.UserResponse;
 import com.example.newspeed.user.dto.response.UserResponseDto;
-import com.example.newspeed.user.entity.User;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +24,8 @@ public class ProfileController {
 
     //유저 비밀번호 변경
     @PutMapping("/users/{id}/password")
-    public ResponseEntity<UserResponseDto> updatePassword(
+    public ResponseEntity<UserResponse> updatePassword(
             @PathVariable("id") Long id,
-//            @SessionAttribute(name = Const.LOGIN_USER) Long id,
             @RequestBody UserPasswordUpdateRequestDto dto
     ) {
         return ResponseEntity.ok(profileService.updatePassword(id, dto.getOldPassword(), dto.getNewPassword()));
@@ -39,9 +33,8 @@ public class ProfileController {
 
     //유저 이름 변경
     @PutMapping("/users/{id}/username")
-    public ResponseEntity<UserResponseDto> updateUserName(
+    public ResponseEntity<UserResponse> updateUserName(
             @PathVariable("id") Long id,
-//            @SessionAttribute(name = Const.LOGIN_USER) Long id,
             @RequestBody UserUserNameUpdateRequestDto dto
     ) {
         return ResponseEntity.ok(profileService.updateUserName(id, dto.getNewUserName()));
@@ -51,12 +44,8 @@ public class ProfileController {
     @DeleteMapping("/users/{id}")
     public void deleteUser(
             @PathVariable("id") Long id
-//            HttpServletRequest request
     ){
-//        HttpSession session = request.getSession(false);
-//        Long id = (Long) session.getAttribute(Const.LOGIN_USER);
         profileService.deleteUserById(id);
-//        session.invalidate();
     }
 
     // 유저 작성 게시물 전체 조회
