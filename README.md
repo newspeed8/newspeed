@@ -116,4 +116,10 @@ API 명세서 이미지와 설명, 노션링크
 
 주요 commit 정리
 
+### 5. 트러블 슈팅
+문성준 : https://velog.io/@ohoh7391/%EB%89%B4%EC%8A%A4%ED%94%BC%EB%93%9C-PJ-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85
+이한빈 : https://phonebee.tistory.com/76
+조민경 : https://github.com/newspeed8/newspeed/commit/1959fe619529cee3ccc05d5289d02a3371bf40d7
+이승민 : https://github.com/newspeed8/newspeed/commit/4420821880a2c54a90cd82602dcc10a888c10f67
+이호수 : 
 
