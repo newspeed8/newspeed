@@ -126,7 +126,6 @@ Jwt 적용한 로그인 및 댓글, 게시물 CRUD 기능 <br>
 #### 운영 환경 구조
 
 ##### ERD
-![ERD]
 
 ![image](https://github.com/user-attachments/assets/060fe1cf-7a86-4e6d-99e4-a55f4227bac0)
 
