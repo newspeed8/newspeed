@@ -106,6 +106,9 @@
 ##### ERD
 ![ERD](newspeed/image/team8.png)
 
+![image](https://github.com/user-attachments/assets/060fe1cf-7a86-4e6d-99e4-a55f4227bac0)
+
+
 API 명세서 이미지와 설명, 노션링크
 
 #### 상세 기능
