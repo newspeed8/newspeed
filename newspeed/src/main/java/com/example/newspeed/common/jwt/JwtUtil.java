@@ -3,6 +3,7 @@ package com.example.newspeed.common.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -93,5 +94,13 @@ public class JwtUtil {
             System.err.println("JWT가 빈 값 입니다: " + e.getMessage());
         }
         return false;
+    }
+
+    public String parseJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization"); // Authorization 헤더에서 추출
+        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7); // "Bearer " 부분을 제외하고 토큰만 반환
+        }
+        return null; // 토큰이 없으면 null 반환
     }
 }

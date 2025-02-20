@@ -2,12 +2,12 @@ package com.example.newspeed.like.controller;
 
 import com.example.newspeed.like.dto.response.LikeResponseDto;
 import com.example.newspeed.like.service.LikeService;
-import com.example.newspeed.common.consts.Const;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import com.example.newspeed.common.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,18 +15,19 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
 
     private final LikeService likeService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/post/{postId}")
     public ResponseEntity<LikeResponseDto> likePost(
             HttpServletRequest request,
             @PathVariable Long postId
     ) {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute(Const.LOGIN_USER) == null) {
-            return ResponseEntity.status(401).body(null);
+        String token = jwtUtil.parseJwt(request); // JWT 토큰을 헤더에서 추출
+        if (token == null || !jwtUtil.validateJwtToken(token)) {
+            return ResponseEntity.status(401).body(null); // 토큰이 유효하지 않거나 없으면 401 반환
         }
 
-        Long userId = (Long) session.getAttribute(Const.LOGIN_USER);
+        Long userId = jwtUtil.getUserIdFromJwtToken(token); // JWT에서 userId 추출
         LikeResponseDto response = likeService.togglePostLike(userId, postId);
 
         return ResponseEntity.ok(response);
@@ -37,13 +38,14 @@ public class LikeController {
             HttpServletRequest request,
             @PathVariable Long commentId
     ) {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute(Const.LOGIN_USER) == null) {
-            return ResponseEntity.status(401).body(null);
+        String token = jwtUtil.parseJwt(request); // JWT 토큰을 헤더에서 추출
+        if (token == null || !jwtUtil.validateJwtToken(token)) {
+            return ResponseEntity.status(401).body(null); // 토큰이 유효하지 않거나 없으면 401 반환
         }
 
-        Long userId = (Long) session.getAttribute(Const.LOGIN_USER);
+        Long userId = jwtUtil.getUserIdFromJwtToken(token); // JWT에서 userId 추출
         LikeResponseDto response = likeService.toggleCommentLike(userId, commentId);
+
         return ResponseEntity.ok(response);
     }
 }
